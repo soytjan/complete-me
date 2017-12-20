@@ -8,16 +8,24 @@ describe('NODE', () => {
     node = new Node('a')
   })
 
-  it('should be a thing', () => {
+  it('expect to be a thing', () => {
     expect(node).to.exist
-  })
+  });
 
-  it('should default children to empty object', () => {
+  it('expect to have default children to empty object', () => {
     expect(node.children).to.deep.equal({});
+  });
+
+  it('expect to take data and assign it to data prop', () => {
+    expect(node.data).to.equal('a')
+  });
+
+  it('expect to have a property of wordEnd that defaults to false', () => {
+    expect(node.wordEnd).to.equal(false);
   })
 
-  it('should take data and assign it to data prop', () => {
-    expect(node.data).to.equal('a')
+  it('expect to have a property of rating that defaults to zero', () => {
+    expect(node.rating).to.equal(0);
   })
 
 })
