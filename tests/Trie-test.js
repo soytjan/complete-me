@@ -52,6 +52,26 @@ describe('TRIE', () => {
       expect(endNode).to.equal(true);
     })
 
+    it('expect to increase count property when a new word is inserted', () => {
+      trie.insert('hello');
+
+      expect(trie.count).to.equal(1);
+
+      trie.insert('bye');
+
+      expect(trie.count).to.equal(2);
+    });
+
+    it('expect to not increase count property when a repeat word is inserted', () => {
+      trie.insert('hello');
+
+      expect(trie.count).to.equal(1);
+
+      trie.insert('hello');
+
+      expect(trie.count).to.equal(1);
+    });
+
     it('expect to insert multiple nodes to the children object of the root', () => {
       expect(trie.root.children).to.deep.equal({});
 
@@ -179,37 +199,92 @@ describe('TRIE', () => {
   });
 
   describe('select', () => {
+    beforeEach(() => {
+      trie.populate(dictionary);
+    });
+
     it('expect to increase rating property of end node when selected', () => {
       trie.insert('pizza');
+      let endNode = trie.findEndNode('pizza');
 
-      let beforeEndNode = trie.findEndNode('pizza');
-
-      expect(beforeEndNode.rating).to.equal(0);
+      expect(endNode.rating).to.equal(0);
 
       trie.select('pizza');
 
-      let afterEndNode = trie.findEndNode('pizza');
+      endNode = trie.findEndNode('pizza');
 
-      expect(afterEndNode.rating).to.equal(1);
+      expect(endNode.rating).to.equal(1);
     });
 
     it('expect to increase rating property of end node when selected multiple times', () => {
-      trie.insert('pizza');
+      let endNode = trie.findEndNode('pizza');
 
-      let beforeEndNode = trie.findEndNode('pizza');
-
-      expect(beforeEndNode.rating).to.equal(0);
+      expect(endNode.rating).to.equal(0);
 
       trie.select('pizza');
       trie.select('pizza');
       trie.select('pizza');
       trie.select('pizza');
 
-      let afterEndNode = trie.findEndNode('pizza');
+      endNode = trie.findEndNode('pizza');
 
-      expect(afterEndNode.rating).to.equal(4);
+      expect(endNode.rating).to.equal(4);
+    });
+
+    it('expect to return an array with the most selected word first', () => {
+      trie.select('pizzeria')
+
+      let suggestions = trie.suggest('pizz');
+
+      expect(suggestions).to.deep.equal(['pizzeria', 'pizza', 'pizzicato', 'pizzle']);
+    });
+
+    it('expect to return an array with the highest rated words in order of their ratings', () => {
+      let suggestions = trie.suggest('pizz');
+
+      expect(suggestions).to.deep.equal(['pizza', 'pizzeria', 'pizzicato', 'pizzle']);
+
+      trie.select('pizzle');
+      trie.select('pizzle');
+      trie.select('pizzle');
+      trie.select('pizzle');
+
+      trie.select('pizzicato');
+      trie.select('pizzicato');
+
+      suggestions = trie.suggest('pizz');
+
+      expect(suggestions).to.deep.equal(['pizzle', 'pizzicato', 'pizza', 'pizzeria']);
     });
   })
 
-  
+  describe('delete', () => {
+    beforeEach(() => {
+      trie.populate(dictionary);
+    })
+
+    it('expect to not return word in suggested array when it is deleted', () => {
+      let suggestions = trie.suggest('pizz');
+
+      expect(suggestions).to.deep.equal(['pizza', 'pizzeria', 'pizzicato', 'pizzle']);
+
+      trie.delete('pizza');
+
+      suggestions = trie.suggest('pizz');
+
+      expect(suggestions).to.deep.equal(['pizzeria', 'pizzicato', 'pizzle']);
+    });
+
+    it('expect to change wordEnd property on last node of word when it is deleted', () => {
+      let endNodePizza = trie.findEndNode('pizza');
+
+      expect(endNodePizza.wordEnd).to.equal(true);
+
+      trie.delete('pizza');
+
+      endNodePizza = trie.findEndNode('pizza');
+
+      expect(endNodePizza.wordEnd).to.equal(false);
+    })
+  });  
 })
