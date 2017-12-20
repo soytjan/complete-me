@@ -46,8 +46,10 @@ describe('TRIE', () => {
     it('expect to change node wordEnd property to true at the end of a word', () => {
       trie.insert('ab');
 
+      let endNode = trie.findEndNode('ab').wordEnd;
+
       expect(trie.root.children.a.wordEnd).to.equal(false);
-      expect(trie.root.children.a.children.b.wordEnd).to.equal(true);
+      expect(endNode).to.equal(true);
     })
 
     it('expect to insert multiple nodes to the children object of the root', () => {
@@ -175,6 +177,39 @@ describe('TRIE', () => {
       expect(suggestions).to.deep.equal(["pize", "pizza", "pizzeria", "pizzicato", "pizzle"]);
     });
   });
+
+  describe('select', () => {
+    it('expect to increase rating property of end node when selected', () => {
+      trie.insert('pizza');
+
+      let beforeEndNode = trie.findEndNode('pizza');
+
+      expect(beforeEndNode.rating).to.equal(0);
+
+      trie.select('pizza');
+
+      let afterEndNode = trie.findEndNode('pizza');
+
+      expect(afterEndNode.rating).to.equal(1);
+    });
+
+    it('expect to increase rating property of end node when selected multiple times', () => {
+      trie.insert('pizza');
+
+      let beforeEndNode = trie.findEndNode('pizza');
+
+      expect(beforeEndNode.rating).to.equal(0);
+
+      trie.select('pizza');
+      trie.select('pizza');
+      trie.select('pizza');
+      trie.select('pizza');
+
+      let afterEndNode = trie.findEndNode('pizza');
+
+      expect(afterEndNode.rating).to.equal(4);
+    });
+  })
 
   
 })
