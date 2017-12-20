@@ -141,7 +141,7 @@ describe('TRIE', () => {
       let suggestion = trie.suggest('a');
 
       expect(suggestion).to.deep.equal(['ace', 'ab']);
-    })
+    });
 
     it('expect to return all words matching suggestion when given more complex words', () => {
       trie.insert('pizza');
@@ -167,7 +167,13 @@ describe('TRIE', () => {
 
     it('expect to populate trie with 235886 words', () => {
       expect(trie.count).to.equal(235886);
-    })
+    });
+
+    it('expect to find words in the dictionary when running suggest', () => {
+      let suggestions = trie.suggest("piz");
+
+      expect(suggestions).to.deep.equal(["pize", "pizza", "pizzeria", "pizzicato", "pizzle"]);
+    });
   });
 
   
