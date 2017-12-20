@@ -46,10 +46,18 @@ describe('TRIE', () => {
     it('expect to change node wordEnd property to true at the end of a word', () => {
       trie.insert('ab');
 
-      let endNode = trie.findEndNode('ab').wordEnd;
+      let endNode = trie.findEndNode('ab');
 
       expect(trie.root.children.a.wordEnd).to.equal(false);
-      expect(endNode).to.equal(true);
+      expect(endNode.wordEnd).to.equal(true);
+    })
+
+    it('expect to have wordEnd property set to false when a word is not a word', () => {
+      trie.populate(dictionary);
+
+      let endNode = trie.findEndNode('pizz');
+
+      expect(endNode.wordEnd).to.equal(false);
     })
 
     it('expect to increase count property when a new word is inserted', () => {
