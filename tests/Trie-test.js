@@ -137,16 +137,10 @@ describe('TRIE', () => {
       expect(suggestion).to.equal(null);      
     });
 
-    // it('expect to return word if suggestion exists', () => {
-
-    // });
-
     it('expect to return full word based off suggestion', () => {
       trie.insert('ace');
 
       expect(trie.count).to.equal(1);
-
-      // let suggestion = trie.suggest('a');
 
       expect(trie.suggest('a')).to.deep.equal(['ace']);
     })
